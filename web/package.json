@@ -1,0 +1,9 @@
+{
+  "name": "bugbits-web-devtools",
+  "private": true,
+  "version": "0.0.0",
+  "description": "BugBits Web 线 Node 侧依赖锁（W0）。产品运行时零 Node 依赖（浏览器 Pyodide）；Node 仅作补充验证。新增依赖必须锁精确版本并提供 lockfile（loop-web.md §3）。",
+  "scripts": {
+    "serve": "python3 -m http.server 8137 --directory out/web"
+  }
+}

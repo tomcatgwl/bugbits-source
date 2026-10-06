@@ -1,0 +1,258 @@
+/* ============================================================================
+ * of04-css-proposal.css — BugBits Web 原作风格 UI（提案，未实际应用）
+ * 任务 OF-04-ui（worker C）。证据等级：DATA/STATIC/HYPOTHESIS 见
+ * docs/of04-layout-evidence.md。选择器对齐 web/index.html 现有 id/class，
+ * 供主 agent 直接引入或合并进 <style>。相对路径消费 gui 纹理
+ * （web_build.py 需先导出 §7.1 清单 → assets/gui/**）。
+ *
+ * 关键取证（STATIC）：
+ *   - 买兵主栏：2 行 × 10 列 = 20 按钮，90×90，列距 95，原点(40,660)
+ *   - 大按钮：3 枚 120×120 @(100+idx·170, 160)
+ *   - 按钮背景=maingui_circle(120)、底条=maingui_bar(89×29)、
+ *     价格图标=nectar_01(64，按钮内画 20×20)、兵种图标=maingui_bug_*(120)
+ *   - 倒计时覆盖：仅消费 snapshot.reload（host.js 已实现），此处只给样式
+ * ========================================================================== */
+
+:root {
+  /* 原作 UI 基准：800×600 参考分辨率下的 UI 单位。Web 场景画布 640 时用
+   * --ui-scale 等比缩放（主 agent 可按 manifest 投影参数设值）。 */
+  --ui-scale: 1;
+  --buy-btn: calc(90px * var(--ui-scale));       /* 主栏按钮 90×90 */
+  --buy-pitch: calc(95px * var(--ui-scale));     /* 列距 95 */
+  --buy-origin-x: calc(40px * var(--ui-scale));  /* X 原点 40 */
+  --buy-origin-y: calc(660px * var(--ui-scale)); /* Y 原点 660（原作视口下方，见局限） */
+  --big-btn: calc(120px * var(--ui-scale));      /* 大按钮 120×120 */
+  --gui-main: "assets/gui/main";
+  --gui-gizmos: "assets/gui/gizmos";
+  --gui-map: "assets/gui/map";
+}
+
+/* ── 1. 买兵栏（#buybar）────────────────────────────────────────────────
+ * 原作：2 行 × 10 列网格，底部锚定。Web 现有 #buybar 为 flex 折行；
+ * 此处改为 CSS grid，2 行 10 列，按钮固定 90 槽。                       */
+#buybar {
+  display: grid;
+  grid-template-columns: repeat(10, var(--buy-btn));
+  grid-auto-rows: var(--buy-btn);
+  gap: calc(var(--buy-pitch) - var(--buy-btn)); /* 列距 95 − 按钮 90 = 5 间隙 */
+  align-items: center;
+  justify-content: start;
+  /* 底部锚定；窄屏折行（原作在 800×600 下右/下越界，Web 以折行近似） */
+  flex-wrap: wrap;
+}
+
+/* 买兵按钮：原作圆形底 + 兵种图标 + 价格 + 倒计时覆盖（STATIC） */
+button.buy {
+  position: relative;
+  width: var(--buy-btn);
+  height: var(--buy-btn);
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background:
+    url("var(--gui-main)/maingui_circle.png") center / contain no-repeat;
+  image-rendering: pixelated;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  color: #f0e8d0;
+  font-family: inherit;
+  overflow: hidden;
+}
+
+/* 兵种图标（maingui_bug_*，120×120 → 铺满按钮槽 90） */
+button.buy .buy-icon {
+  width: calc(var(--buy-btn) * 0.72);   /* 图标略小于槽，留价格/倒计时空间 */
+  height: calc(var(--buy-btn) * 0.72);
+  object-fit: contain;
+  image-rendering: pixelated;
+  pointer-events: none;
+}
+
+/* 历史提案：nectar STATIC 20×20@(16,4)为bar-local，不能直接当button-local。
+   2026-10-04父链纠正见docs/linux-static-visual-evidence.md §5。 */
+button.buy .price {
+  position: absolute;
+  bottom: 4px;
+  right: 4px;
+  font-size: calc(12px * var(--ui-scale));
+  color: #ffe08a;
+  text-shadow: 1px 1px 0 #000;
+}
+
+/* 价格小图标（nectar_01）——可选，落在价格旁 */
+button.buy .price::before {
+  content: "";
+  display: inline-block;
+  width: calc(20px * var(--ui-scale));
+  height: calc(20px * var(--ui-scale));
+  background: url("assets/gui/nectar_01.png") center / contain no-repeat;
+  vertical-align: middle;
+  margin-right: 2px;
+  image-rendering: pixelated;
+}
+
+/* 倒计时徽标：仅消费 snapshot.reload（host.js 已实现 mm:ss 剩余），
+ * 本规则只定义原作「覆盖」样式；不重实现门禁/冷却语义。 */
+button.buy .reload {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(18px * var(--ui-scale));
+  font-weight: 700;
+  color: #ffd060;
+  background: rgba(0, 0, 0, 0.55);
+  border-radius: 50%;
+  text-shadow: 1px 1px 0 #000;
+  pointer-events: none;   /* 按钮仍可点（原作 CD 无门禁，OF-02） */
+}
+
+button.buy:hover:not(:disabled) { filter: brightness(1.15); }
+button.buy:disabled { opacity: 0.45; cursor: not-allowed; }
+
+/* ── 2. HUD 顶部框（maingui_top / maingui_top_right，DATA 尺寸 512×86）─
+ * 屏幕坐标 HYPOTHESIS（未 byte 证），以下为建议布局。                  */
+#hud {
+  position: relative;
+  min-height: calc(86px * var(--ui-scale));
+  padding: calc(10px * var(--ui-scale)) calc(14px * var(--ui-scale));
+  /* 左半框 */
+  background: url("var(--gui-main)/maingui_top.png") top left /
+    calc(512px * var(--ui-scale)) calc(86px * var(--ui-scale)) no-repeat;
+}
+
+/* 右半框可叠加（可选装饰层） */
+#hud::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: calc(512px * var(--ui-scale));
+  height: calc(86px * var(--ui-scale));
+  background: url("var(--gui-main)/maingui_top_right.png") top right / contain no-repeat;
+  pointer-events: none;
+}
+
+/* HUD 文案浮在框上 */
+#hud > * { position: relative; z-index: 1; }
+
+/* 花蜜数（可配 maingui_circle 圆形衬底，HYPOTHESIS） */
+#hud-nectar { color: #ffe08a; font-weight: 700; }
+
+/* ── 3. HUD 底部面板（maingui_base_small / _right，DATA 370×120）─── */
+#hud-objective {
+  /* 底部左面板为底衬（坐标 HYPOTHESIS） */
+  background: url("var(--gui-main)/maingui_base_small.png") top left /
+    calc(370px * var(--ui-scale)) calc(120px * var(--ui-scale)) no-repeat;
+  padding: calc(12px * var(--ui-scale));
+  color: #d8dcd8;
+}
+
+/* ── 4. 光标（cursor_v1_a / cursor_v1_b，DATA 64×64）─────────────────
+ * 触发条件 HYPOTHESIS；默认用 A 态，交互 B 态为占位。                  */
+#scene { cursor: url("var(--gui-gizmos)/cursor_v1_a.png") 16 16, auto; }
+#scene:active { cursor: url("var(--gui-gizmos)/cursor_v1_b.png") 16 16, auto; }
+
+/* ── 5. 局内 gizmos（均 DATA 尺寸；屏幕位置/触发 HYPOTHESIS）────── */
+/* 蜜光点（glow_star_01 64×64）——路径蜜/可采高亮 */
+.gizmo-nectar {
+  width: calc(64px * var(--ui-scale));
+  height: calc(64px * var(--ui-scale));
+  background: url("var(--gui-gizmos)/glow_star_01.png") center / contain no-repeat;
+  image-rendering: pixelated;
+  pointer-events: none;
+}
+
+/* 出生/泳道标记（startarrow_01 128×128） */
+.gizmo-startarrow {
+  width: calc(128px * var(--ui-scale));
+  height: calc(128px * var(--ui-scale));
+  background: url("var(--gui-gizmos)/startarrow_01.png") center / contain no-repeat;
+  image-rendering: pixelated;
+  pointer-events: none;
+}
+
+/* 警告（warning_01 256×256）——巢受击/低血 */
+.gizmo-warning {
+  width: calc(256px * var(--ui-scale));
+  height: calc(256px * var(--ui-scale));
+  background: url("var(--gui-gizmos)/warning_01.png") center / contain no-repeat;
+  image-rendering: pixelated;
+  pointer-events: none;
+}
+
+/* 圆形按钮（circlebutton_01 32×32）——选路/确认 */
+button.gizmo-circle {
+  width: calc(32px * var(--ui-scale));
+  height: calc(32px * var(--ui-scale));
+  border: none;
+  border-radius: 50%;
+  background: url("var(--gui-gizmos)/circlebutton_01.png") center / contain no-repeat;
+  image-rendering: pixelated;
+}
+
+/* ── 6. 选关遮罩（#overlay：map_bg_* + map_button_*，DATA）────────── */
+#overlay {
+  background:
+    url("var(--gui-map)/map_bg_lowres.png") center / cover no-repeat,
+    #14161a;
+}
+
+/* 关卡按钮：原作 map_button_* 模式图标（battle/challenge/defense/gather/
+ * random/rescue），按钮类型→纹理映射 HYPOTHESIS，仅示例 battle。 */
+.level-btn {
+  background: url("var(--gui-map)/map_button_battle.png") left center /
+    calc(102px * var(--ui-scale)) calc(103px * var(--ui-scale)) no-repeat;
+  padding-left: calc(112px * var(--ui-scale));
+  min-height: calc(103px * var(--ui-scale));
+  color: #e8e4d8;
+  border: 1px solid #4a5a5a;
+  border-radius: 6px;
+}
+/* 各模式可覆写背景（主 agent 按 level.type 映射）：
+ *   battle→map_button_battle / challenge→map_button_challenge /
+ *   defense→map_button_defense / gather→map_button_gather /
+ *   random→map_button_random / rescue→map_button_rescue               */
+
+/* 已完成关卡标记（map_completed 102×103，等级映射 HYPOTHESIS） */
+.level-btn.completed::after {
+  content: "";
+  position: absolute;
+  right: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: calc(102px * var(--ui-scale));
+  height: calc(103px * var(--ui-scale));
+  background: url("var(--gui-map)/map_completed.png") center / contain no-repeat;
+  image-rendering: pixelated;
+}
+
+/* 完成奖章（medal_* 256×256，铜/银/金映射 HYPOTHESIS；示例金） */
+.level-btn.gold::before {
+  content: "";
+  position: absolute;
+  left: 4px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: calc(256px * var(--ui-scale));
+  height: calc(256px * var(--ui-scale));
+  background: url("var(--gui-main)/medal_gold_01.png") center / contain no-repeat;
+  image-rendering: pixelated;
+}
+
+/* ── 7. 通用：像素纹理按最近邻缩放，避免模糊 ─────────────────────── */
+img.buy-icon,
+[style*="maingui"],
+[style*="gizmos"],
+[style*="map_"] {
+  image-rendering: pixelated;
+}
+
+/* 窄屏折行：原作网格 10 列在 <1000px 视口越界，Web 折行近似（局限） */
+@media (max-width: 1000px) {
+  #buybar { grid-template-columns: repeat(5, var(--buy-btn)); }
+}
