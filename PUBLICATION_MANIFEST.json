@@ -1,6 +1,5 @@
 {
   "status": "MIT_SOURCE_INCREMENT_CONTENT_VERIFIED",
-  "auditSHA256": "36b29ff8cd68803eba37baae455e88ac2390bb1a2336bbd68ffb33fed7f9a219",
   "files": [
     {
       "path": "src/bugbits/__init__.py",
@@ -1079,8 +1078,8 @@
     },
     {
       "path": "native/README.md",
-      "bytes": 1490,
-      "sha256": "2ddd573f154e79778e7282c8312a975475190104975c7a4e781ddb780e883273",
+      "bytes": 3153,
+      "sha256": "5ea6c1b2c7e359479daac61891a7ad7a5303cd91c9f0b349d8dd62b8e9651065",
       "mode": "100644"
     },
     {
@@ -1106,10 +1105,22 @@
       "bytes": 5533,
       "sha256": "a3f7c70e938e87ef00063c41f020d2dc6ae68e8a386ea05d3f4d40ebd02b6fce",
       "mode": "100644"
+    },
+    {
+      "path": "native/support/release_guard.h",
+      "bytes": 2263,
+      "sha256": "1f13fb07e408ccb7c6d8399b2c9051079f04e42fed6f6c755681c053e762abe7",
+      "mode": "100644"
+    },
+    {
+      "path": "native/tests/test_release_guard.c",
+      "bytes": 2555,
+      "sha256": "6bbd7e53906e50aad25fc3d63e24622578908dcf1e000d83542e06b9c1c8d314",
+      "mode": "100644"
     }
   ],
   "omittedPaths": [],
-  "bytes": 2273467,
+  "bytes": 2279948,
   "codeOwnershipConfirmed": true,
   "codeLicenseConfirmed": true,
   "containsOriginalGitHistory": false,
@@ -1118,13 +1129,14 @@
   "targetRepository": "tomcatgwl/bugbits-source",
   "targetVisibility": "public",
   "authorization": "我有权公开这些项目代码，使用MIT许可证，上传到新建公开仓库 tomcatgwl/bugbits-source。",
-  "previousCandidateManifestSHA256": "e5106c118fc5158ab1b579e58d4cd6b0d02d2ea9f09bc74a0aaaee108bb4a4f2",
+  "previousCandidateManifestSHA256": "bf35aeb9ef5b2462d2e7620d0f393f2734ff475752a734126842713c74798037",
   "updateDate": "2026-10-09",
-  "previousPublishedCommit": "48c242adc4101e30b40a3d2cacb10f6df6e0f03e",
-  "updateScope": "Independent native byte kernels and asset-free synthetic tests; no original runtime evidence",
+  "previousPublishedCommit": "eba8c246d5825611923682ea55aabb7999f5fb2c",
+  "updateScope": "Original bounded reentrant lifetime metadata and asset-free synthetic C tests; no observer hooks or original runtime evidence",
   "originalAssetsIncluded": false,
   "oldGitHistoryIncluded": false,
   "manifestScope": "Implementation files and native project/tests; excludes publication metadata to avoid a self-referential hash",
   "publicationReceiptRequiredForCurrentUpdate": true,
-  "previousPublicationVerified": true
+  "previousPublicationVerified": true,
+  "initialAuditSHA256": "36b29ff8cd68803eba37baae455e88ac2390bb1a2336bbd68ffb33fed7f9a219"
 }

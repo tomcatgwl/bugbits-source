@@ -28,7 +28,7 @@ PYTHONPATH=src:tests python3 -B -m unittest test_assets_v3d_world_synthetic
 
 ## 独立原生内核
 
-`native/`只包含自主编写的字节处理代码、Godot项目配置和合成测试，不包含完整原生游戏或任何原作运行数据。代码实现整数时域/空间滤波和固定像素中心缩小；接口、限制和无需原素材的测试命令见 [native/README.md](native/README.md)。内核测试通过不能证明完整画面、遮挡或游戏还原通过。
+`native/`只包含自主编写的字节处理代码、Godot项目配置、独立引用生命周期元数据与合成测试，不包含完整原生游戏或任何原作运行数据。代码实现整数时域/空间滤波和固定像素中心缩小；接口、限制和无需原素材的测试命令见 [native/README.md](native/README.md)。内核测试通过不能证明完整画面、遮挡或游戏还原通过。
 
 ## 发布清单
 

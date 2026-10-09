@@ -29,3 +29,34 @@ godot --headless --path native --script res://tests/test_kernels.gd -- --negativ
 These tests cover byte processing only. They do not verify the original game's
 complete rendering, animation, occlusion, timing or gameplay. The full native
 prototype and private original-runtime evidence are not included.
+
+## Reentrant lifetime metadata
+
+`support/release_guard.h` is original C bookkeeping for nested release callbacks.
+It never accesses the observed object, invokes a release method, or owns a
+reference. A nested terminal return marks the generation; retirement is deferred
+until the outermost call completes. The owner must initialize metadata before
+publication, maintain object/slot lifetime, and stop reusing retired generations.
+
+The intended contract is a single owner with synchronous reentry. Atomic fields
+do not supply a concurrent object registry or prove safety for overlapping
+destruction, generation reuse, or arbitrary COM implementations. Depth and event
+limits, underflow, and a nonzero return after a terminal return set sticky unknown
+flags. The last case can also arise from legitimate concurrent completion order;
+it is a conservative refusal, not proof of an object implementation defect.
+
+With a C11 compiler supporting GCC-style atomic builtins, run these synthetic
+checks from the repository root (all outputs stay in the project):
+
+```sh
+mkdir -p out/native-checks
+cc -std=c11 -Wall -Wextra -Werror -I native/support native/tests/test_release_guard.c -o out/native-checks/test_release_guard
+out/native-checks/test_release_guard
+```
+
+`out/native-checks/test_release_guard --negative-expected` deliberately expects
+early retirement and must exit 1. Unknown options exit 2. These checks require no
+game assets, Wine, graphics server, or original runtime observations. They test
+metadata sequences only; they cannot establish game fidelity or general COM
+lifecycle safety. No observer hooks, DLLs, disassembly or private captures are
+included.

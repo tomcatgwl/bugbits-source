@@ -34,3 +34,12 @@ their protected expression, and explains that research or modifications alone do
 not establish permission to redistribute someone else's work.
 [Copyright protection](https://www.copyright.gov/help/faq/faq-protect.html),
 [Permission and fair use](https://www.copyright.gov/help/faq/faq-fairuse.html).
+
+## Lifetime metadata update, 2026-10-09
+
+The selected header and C checks are original implementation and synthetic
+metadata sequences under MIT. They contain no original assets, executable
+instructions, copied platform implementation, runtime dumps or private observer
+hooks. Existing font/OFL files and all previously published implementations are
+unchanged. The documented scope excludes general concurrent lifecycle safety and
+does not claim completed game fidelity.
