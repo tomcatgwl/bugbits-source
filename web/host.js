@@ -274,6 +274,17 @@ function updateCameraControl() {
     if (captured) { captured.disabled = !render.worldPresets?.original_static_01
       || !capturedCameraApplicable(render.worldPresets.original_static_01,state.levelId,level?.type,state.world); }
     control.setAttribute("aria-busy", render.presetPending === null ? "false" : "true");
+    const direct = $("camera-direct");
+    if (direct) {
+      direct.setAttribute("aria-busy", render.presetPending === null ? "false" : "true");
+      for (const button of direct.querySelectorAll("button[data-camera-key]")) {
+        const option = control.querySelector(`option[value="${button.dataset.cameraKey}"]`);
+        button.disabled = control.disabled || !option || option.disabled;
+        const active = button.dataset.cameraKey === control.value;
+        button.setAttribute("aria-pressed", String(active));
+        button.style.borderColor = active ? "#7ec97e" : "";
+      }
+    }
   }
   const note = $("camera-note");
   if (note) {
@@ -1148,6 +1159,26 @@ function renderBuyBar() {
     void setCameraPreset(key);
   };
   controls.appendChild(camera);
+  // Page buttons remain usable when an embedded browser cannot open a native
+  // select popup. They share the existing change handler and availability rules.
+  const cameraDirect = document.createElement("span");
+  cameraDirect.id = "camera-direct";
+  cameraDirect.setAttribute("role", "group");
+  cameraDirect.setAttribute("aria-label", "画面视角");
+  cameraDirect.style.cssText = "display:flex;gap:6px;flex-wrap:wrap;flex-basis:100%";
+  for (const option of camera.options) {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.dataset.cameraKey = option.value;
+    button.textContent = option.textContent;
+    button.onclick = () => {
+      if (button.disabled || !cameraControlAvailable()) { return; }
+      camera.value = option.value;
+      camera.dispatchEvent(new Event("change", {bubbles: true}));
+    };
+    cameraDirect.appendChild(button);
+  }
+  controls.appendChild(cameraDirect);
   const meshControls = document.createElement('span');meshControls.id='mesh-controls';
   meshControls.hidden = true;
   const meshTarget = document.createElement('select');meshTarget.id='mesh-target';

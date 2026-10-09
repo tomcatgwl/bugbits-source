@@ -57,3 +57,7 @@ prediction run in the independent publication tree. No rig, skin, screenshot,
 original bytes, private path, game prototype or failed private experiment is
 included. The existing font retains OFL. These component checks do not claim
 that the experimental game consumer or full visual fidelity has passed.
+
+## Direct camera controls, 2026-10-09
+
+Only original host UI code changes: direct camera buttons use the existing change handler and mirror select/option availability. No camera matrices, assets, simulation or shaders change. Actual browser button clicks cover four views at a fixed simulation tick; all four canvas outputs differ and repeated views reproduce the same output. Legacy select regression passes. 26 focused camera tests and 149 asset-format assertions pass locally. The full game suite was not rerun. Private screenshots, fixtures, game data, delivery scripts and runtime evidence remain excluded.

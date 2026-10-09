@@ -310,8 +310,8 @@
     },
     {
       "path": "web/host.js",
-      "bytes": 125208,
-      "sha256": "709b4e19877452d4bab916f7515598d1a23f91c080cc10b09219e22bda5c18b7",
+      "bytes": 126745,
+      "sha256": "65825adfd7351622d09848041558640231193d2f41dea987599f58d8e1b279cf",
       "mode": "100644"
     },
     {
@@ -1144,7 +1144,7 @@
     }
   ],
   "omittedPaths": [],
-  "bytes": 2286531,
+  "bytes": 2288068,
   "codeOwnershipConfirmed": true,
   "codeLicenseConfirmed": true,
   "containsOriginalGitHistory": false,
@@ -1155,8 +1155,8 @@
   "authorization": "我有权公开这些项目代码，使用MIT许可证，上传到新建公开仓库 tomcatgwl/bugbits-source。",
   "previousCandidateManifestSHA256": "bf35aeb9ef5b2462d2e7620d0f393f2734ff475752a734126842713c74798037",
   "updateDate": "2026-10-09",
-  "previousPublishedCommit": "d75db75e79cdcfb174fd0e6f57cb57a88bbc0a50",
-  "updateScope": "Original CPU pose-array helper, normal-storage predictor and asset-free synthetic tests; experimental consumers/assets excluded",
+  "previousPublishedCommit": "749f3ddd6d8e941186fced4957e6b1ca8651a1f8",
+  "updateScope": "Original host direct camera controls only; no assets or private runtime evidence",
   "originalAssetsIncluded": false,
   "oldGitHistoryIncluded": false,
   "manifestScope": "Implementation files and native project/tests; excludes publication metadata to avoid a self-referential hash",
