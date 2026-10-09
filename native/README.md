@@ -60,3 +60,24 @@ game assets, Wine, graphics server, or original runtime observations. They test
 metadata sequences only; they cannot establish game fidelity or general COM
 lifecycle safety. No observer hooks, DLLs, disassembly or private captures are
 included.
+
+## Controlled pose arrays and normal storage
+
+`support/controlled_pose_buffer.gd` privately replaces a validated position/normal
+pool while retaining other CPU surface-array entries. It does not promise that
+ArrayMesh re-encoding preserves every derived renderer attribute.
+`support/normal_transport.gd` predicts the engine's octahedral normal storage,
+including the float32 scaling step; its input must be finite and nonzero.
+The following synthetic tests need Godot, but no original game assets:
+
+```sh
+godot --headless --path native --script res://tests/test_controlled_pose_buffer.gd
+godot --headless --path native --script res://tests/test_normal_transport_boundary.gd
+BUGBITS_FORCE_DOUBLE_SCALE=1 godot --headless --path native --script res://tests/test_normal_transport_boundary.gd
+```
+
+The last command intentionally uses an incorrect scaling prediction and must
+exit 1. The checks validate standalone component behavior and actual ArrayMesh
+readback. They do not establish a visible game window, controlled game action,
+or original-game visual fidelity. Experimental game consumers, rigs, original
+geometry and screenshots are excluded.

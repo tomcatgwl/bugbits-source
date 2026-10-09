@@ -47,3 +47,13 @@ does not claim completed game fidelity.
 ## Camera delivery update, 2026-10-09
 
 Only original host control code changes: a bounded 30-second camera load deadline and actionable error text. Camera matrices, simulation and original assets are unchanged. Real browser tests cover a 9-second delayed scene, camera switching, a 31-second timeout and the ordinary player page. Private fixtures, screenshots, scene packages and delivery research remain excluded. This repair does not establish full visual fidelity or the unique cause of the reported remote-browser failure.
+
+## Pose storage tools update, 2026-10-09
+
+Four original MIT source/test files add a CPU surface-array replacement seam and
+an engine normal-storage prediction. Synthetic directions and triangles are
+generated without original game data. Positive checks and an intentionally wrong
+prediction run in the independent publication tree. No rig, skin, screenshot,
+original bytes, private path, game prototype or failed private experiment is
+included. The existing font retains OFL. These component checks do not claim
+that the experimental game consumer or full visual fidelity has passed.

@@ -1078,8 +1078,8 @@
     },
     {
       "path": "native/README.md",
-      "bytes": 3153,
-      "sha256": "5ea6c1b2c7e359479daac61891a7ad7a5303cd91c9f0b349d8dd62b8e9651065",
+      "bytes": 4300,
+      "sha256": "474cc07e048a1e2e8ff7998c20b99eb7f68cc468d4213d75fe39f78c97825fbe",
       "mode": "100644"
     },
     {
@@ -1117,10 +1117,34 @@
       "bytes": 2555,
       "sha256": "6bbd7e53906e50aad25fc3d63e24622578908dcf1e000d83542e06b9c1c8d314",
       "mode": "100644"
+    },
+    {
+      "path": "native/support/controlled_pose_buffer.gd",
+      "bytes": 748,
+      "sha256": "698e6b783b930f1af605b9ed47d50965ac5253acde88bad00da6c99d591d0317",
+      "mode": "100644"
+    },
+    {
+      "path": "native/support/normal_transport.gd",
+      "bytes": 525,
+      "sha256": "e6b6fafc1545878b8dba383b20f31cacee30136062aeb8aaf3109a66f0c3601d",
+      "mode": "100644"
+    },
+    {
+      "path": "native/tests/test_controlled_pose_buffer.gd",
+      "bytes": 2363,
+      "sha256": "13ae3b24169e9ebdefdba8bc635e5a94d3842fc5d8bb32cda5ead9d4e1472e43",
+      "mode": "100644"
+    },
+    {
+      "path": "native/tests/test_normal_transport_boundary.gd",
+      "bytes": 1512,
+      "sha256": "98396755539f101847101453acd21b2b10c435f856e5e17aa1250daec52b7b3e",
+      "mode": "100644"
     }
   ],
   "omittedPaths": [],
-  "bytes": 2280236,
+  "bytes": 2286531,
   "codeOwnershipConfirmed": true,
   "codeLicenseConfirmed": true,
   "containsOriginalGitHistory": false,
@@ -1131,8 +1155,8 @@
   "authorization": "我有权公开这些项目代码，使用MIT许可证，上传到新建公开仓库 tomcatgwl/bugbits-source。",
   "previousCandidateManifestSHA256": "bf35aeb9ef5b2462d2e7620d0f393f2734ff475752a734126842713c74798037",
   "updateDate": "2026-10-09",
-  "previousPublishedCommit": "a14645c9ce2341a388ed9e88ba81b052f40adb1a",
-  "updateScope": "Original host camera load deadline and failure text; no assets, captures or private delivery fixtures",
+  "previousPublishedCommit": "d75db75e79cdcfb174fd0e6f57cb57a88bbc0a50",
+  "updateScope": "Original CPU pose-array helper, normal-storage predictor and asset-free synthetic tests; experimental consumers/assets excluded",
   "originalAssetsIncluded": false,
   "oldGitHistoryIncluded": false,
   "manifestScope": "Implementation files and native project/tests; excludes publication metadata to avoid a self-referential hash",
