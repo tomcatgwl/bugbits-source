@@ -1,6 +1,6 @@
 # BugBits source snapshot
 
-这是游戏逆向研究与重实现的**MIT源码快照**，包含当前Python模块、网页源码、工具、harness与选定测试。它不是原游戏发行包，也不是已完成的忠实复刻。
+这是游戏逆向研究与重实现的**MIT源码仓库**，包含Python模块、网页源码、工具、harness、选定测试及经过审查的独立原生字节处理内核。它不是原游戏发行包，也不是已完成的忠实复刻。
 
 ## 内容与授权
 
@@ -8,7 +8,7 @@
 
 原游戏及相关名称、素材的权利归各自权利人；此项目与权利人没有已确认的关联或认可。本快照不提供原素材的下载链接、破解或许可绕过功能。
 
-**项目代码按MIT许可证发布**，见根级`LICENSE`。用户已确认有权公开项目代码并选择MIT。此源码快照已准备，但远程GitHub上传状态须由实际发布回执确认。
+**项目代码按MIT许可证发布**，见根级`LICENSE`。用户已确认有权公开项目代码并选择MIT。本仓库已发布；新增进展按相同素材排除与许可边界审查后提交。
 
 `web/NotoSansSC-subset.woff2`是独立第三方字体，按SIL OFL-1.1提供，见`web/OFL.txt`。项目MIT代码许可不覆盖该字体，也不授权任何原游戏素材。
 
@@ -26,8 +26,12 @@ PYTHONPATH=src:tests python3 -B -m unittest test_assets_v3d_world_synthetic
 
 依赖内部research或私有原运行证据的部分测试不在此快照；完整开发现场和原验收报告没有上传。
 
+## 独立原生内核
+
+`native/`只包含自主编写的字节处理代码、Godot项目配置和合成测试，不包含完整原生游戏或任何原作运行数据。代码实现整数时域/空间滤波和固定像素中心缩小；接口、限制和无需原素材的测试命令见 [native/README.md](native/README.md)。内核测试通过不能证明完整画面、遮挡或游戏还原通过。
+
 ## 发布清单
 
-`PUBLICATION_MANIFEST.json`记录复制代码的路径、字节数与SHA256，以及排除内容、已确认的授权和尚未执行的GitHub上传状态。审查说明见`PUBLICATION_REVIEW.md`。
+`PUBLICATION_MANIFEST.json`记录当前发布代码的路径、字节数与SHA256、排除内容和已确认的授权。新增发布审查见`PUBLICATION_REVIEW.md`。文件清单不替代远程提交回执。
 
-目标：GitHub公开仓库`tomcatgwl/bugbits-source`。本地Git仓库是新建的单一源码快照，不携带开发仓库的旧历史。
+目标：GitHub公开仓库`tomcatgwl/bugbits-source`。仓库从独立源码快照开始，后续增量提交仍不携带私有开发仓库的旧历史。

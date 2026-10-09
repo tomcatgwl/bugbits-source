@@ -1,5 +1,5 @@
 {
-  "status": "MIT_SOURCE_READY_NOT_PUBLISHED",
+  "status": "MIT_SOURCE_INCREMENT_CONTENT_VERIFIED",
   "auditSHA256": "36b29ff8cd68803eba37baae455e88ac2390bb1a2336bbd68ffb33fed7f9a219",
   "files": [
     {
@@ -1076,18 +1076,55 @@
       "bytes": 2538,
       "sha256": "927465462b8eb06da8ed947b3c51fda245b452f90d40e6ef224901dab7167f0c",
       "mode": "100644"
+    },
+    {
+      "path": "native/README.md",
+      "bytes": 1490,
+      "sha256": "2ddd573f154e79778e7282c8312a975475190104975c7a4e781ddb780e883273",
+      "mode": "100644"
+    },
+    {
+      "path": "native/project.godot",
+      "bytes": 185,
+      "sha256": "a2b348e115ff7336c1ee1b270200ab67740b691f4078a476296fabbe6c3b5e14",
+      "mode": "100644"
+    },
+    {
+      "path": "native/kernels/temporal_blur.gd",
+      "bytes": 2967,
+      "sha256": "bde0f14118c35517dc7d5bebde43b8e93eff7fd8c686b178a687a0cf988cbf73",
+      "mode": "100644"
+    },
+    {
+      "path": "native/kernels/pixel_center_copy.gd",
+      "bytes": 878,
+      "sha256": "216c8a50c8507d581d91ab18cd01a7d3313f8ff36ed7d16b818556eaf31f2848",
+      "mode": "100644"
+    },
+    {
+      "path": "native/tests/test_kernels.gd",
+      "bytes": 5533,
+      "sha256": "a3f7c70e938e87ef00063c41f020d2dc6ae68e8a386ea05d3f4d40ebd02b6fce",
+      "mode": "100644"
     }
   ],
   "omittedPaths": [],
-  "bytes": 2262414,
+  "bytes": 2273467,
   "codeOwnershipConfirmed": true,
   "codeLicenseConfirmed": true,
   "containsOriginalGitHistory": false,
-  "githubUploadExecuted": false,
   "projectLicense": "MIT",
   "thirdPartyFontLicense": "OFL-1.1",
   "targetRepository": "tomcatgwl/bugbits-source",
   "targetVisibility": "public",
   "authorization": "我有权公开这些项目代码，使用MIT许可证，上传到新建公开仓库 tomcatgwl/bugbits-source。",
-  "previousCandidateManifestSHA256": "e5106c118fc5158ab1b579e58d4cd6b0d02d2ea9f09bc74a0aaaee108bb4a4f2"
+  "previousCandidateManifestSHA256": "e5106c118fc5158ab1b579e58d4cd6b0d02d2ea9f09bc74a0aaaee108bb4a4f2",
+  "updateDate": "2026-10-09",
+  "previousPublishedCommit": "48c242adc4101e30b40a3d2cacb10f6df6e0f03e",
+  "updateScope": "Independent native byte kernels and asset-free synthetic tests; no original runtime evidence",
+  "originalAssetsIncluded": false,
+  "oldGitHistoryIncluded": false,
+  "manifestScope": "Implementation files and native project/tests; excludes publication metadata to avoid a self-referential hash",
+  "publicationReceiptRequiredForCurrentUpdate": true,
+  "previousPublicationVerified": true
 }

@@ -1,6 +1,6 @@
 # U.S. copyright review and publication scope
 
-Prepared 2026-10-07. The user confirmed authority to publish the project code under MIT and authorized a new public repository, tomcatgwl/bugbits-source. This is a source-only snapshot; remote upload remains unexecuted.
+Initial source snapshot prepared 2026-10-07 and subsequently published. The user confirmed authority to publish project code under MIT and authorized the public repository tomcatgwl/bugbits-source. Subsequent code updates retain the same asset exclusion and licensing boundaries.
 
 Under 17 U.S.C. §106, copyright owners generally control copying, derivative works and public distribution. §107 fair use is fact-specific; research, attribution or noncommercial intent alone does not authorize redistribution of a complete game asset collection. §102(b) distinguishes functional ideas and methods from protected expression. [U.S. Copyright Office, Chapter 1](https://www.copyright.gov/title17/92chap1.html)
 
@@ -18,4 +18,19 @@ The heuristic scan found no byte-identical complete original game file, listed s
 
 GitHub's copyright complaint process remains applicable. [GitHub DMCA policy](https://docs.github.com/en/site-policy/content-removal-policies/dmca-takedown-policy)
 
-Code-license status: **MIT, authorized by the user**. GitHub-upload status: **not executed**. A local content manifest is not a publication receipt.
+Code-license status: **MIT, authorized by the user**. A content manifest is not a remote publication receipt.
+
+## Native kernel update, 2026-10-09
+
+Selected `native/` files are original project implementations, configuration and
+synthetic tests. The filtering arithmetic, API dimensions and sample coordinates
+are functional methods; the files contain no copied game instructions or assets.
+Private research scripts, original-runtime observations, screenshots and state
+oracles remain excluded. This selection does not establish a clean-room process
+or claim full game fidelity. The font and its OFL notice remain unchanged.
+
+The current U.S. Copyright Office guidance distinguishes methods and ideas from
+their protected expression, and explains that research or modifications alone do
+not establish permission to redistribute someone else's work.
+[Copyright protection](https://www.copyright.gov/help/faq/faq-protect.html),
+[Permission and fair use](https://www.copyright.gov/help/faq/faq-fairuse.html).

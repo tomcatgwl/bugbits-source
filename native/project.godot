@@ -1,0 +1,10 @@
+config_version=5
+
+[application]
+config/name="BugBits independent byte kernels"
+
+[debug]
+file_logging/enable_file_logging=false
+
+[rendering]
+renderer/rendering_method="gl_compatibility"
