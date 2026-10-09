@@ -310,8 +310,8 @@
     },
     {
       "path": "web/host.js",
-      "bytes": 124920,
-      "sha256": "0d710aa99ef2b154f164c119f8685da8d72e7f35cf25e8b0ee1afeba60d65468",
+      "bytes": 125208,
+      "sha256": "709b4e19877452d4bab916f7515598d1a23f91c080cc10b09219e22bda5c18b7",
       "mode": "100644"
     },
     {
@@ -1120,7 +1120,7 @@
     }
   ],
   "omittedPaths": [],
-  "bytes": 2279948,
+  "bytes": 2280236,
   "codeOwnershipConfirmed": true,
   "codeLicenseConfirmed": true,
   "containsOriginalGitHistory": false,
@@ -1131,8 +1131,8 @@
   "authorization": "我有权公开这些项目代码，使用MIT许可证，上传到新建公开仓库 tomcatgwl/bugbits-source。",
   "previousCandidateManifestSHA256": "bf35aeb9ef5b2462d2e7620d0f393f2734ff475752a734126842713c74798037",
   "updateDate": "2026-10-09",
-  "previousPublishedCommit": "eba8c246d5825611923682ea55aabb7999f5fb2c",
-  "updateScope": "Original bounded reentrant lifetime metadata and asset-free synthetic C tests; no observer hooks or original runtime evidence",
+  "previousPublishedCommit": "a14645c9ce2341a388ed9e88ba81b052f40adb1a",
+  "updateScope": "Original host camera load deadline and failure text; no assets, captures or private delivery fixtures",
   "originalAssetsIncluded": false,
   "oldGitHistoryIncluded": false,
   "manifestScope": "Implementation files and native project/tests; excludes publication metadata to avoid a self-referential hash",

@@ -31,7 +31,7 @@ const $ = (id) => document.getElementById(id);
 const TICK_HZ = 20;
 const CANVAS_SIZE = 640;
 // Engineering deadline for one camera request, including fetch and decoding.
-const CAMERA_LOAD_TIMEOUT_MS = 8000;
+const CAMERA_LOAD_TIMEOUT_MS = 30000;
 // Shared production/test near policy: keep a legal canvas lane target under
 // the existing 200-world-unit input contract. Original_cam remains research.
 const NEAR_CAMERA_PRESET = "wide_cam";
@@ -276,7 +276,14 @@ function updateCameraControl() {
     control.setAttribute("aria-busy", render.presetPending === null ? "false" : "true");
   }
   const note = $("camera-note");
-  if (note) { note.textContent = render.presetError ? "视角加载失败，已保留当前视角。" : ""; }
+  if (note) {
+    const reason = render.presetError === 'Camera request timed out'
+      ? '加载超过30秒，请重新选择视角重试'
+      : render.presetError === 'WebGL2 unavailable'
+        ? '当前设备无法使用3D渲染，请在其他设备重试'
+        : render.presetError;
+    note.textContent = reason ? `视角加载失败：${reason}。已保留当前视角。` : '';
+  }
 }
 
 // Atomic publish: terrain/projection/sprite metadata and stage geometry switch

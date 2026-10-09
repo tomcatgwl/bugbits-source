@@ -43,3 +43,7 @@ instructions, copied platform implementation, runtime dumps or private observer
 hooks. Existing font/OFL files and all previously published implementations are
 unchanged. The documented scope excludes general concurrent lifecycle safety and
 does not claim completed game fidelity.
+
+## Camera delivery update, 2026-10-09
+
+Only original host control code changes: a bounded 30-second camera load deadline and actionable error text. Camera matrices, simulation and original assets are unchanged. Real browser tests cover a 9-second delayed scene, camera switching, a 31-second timeout and the ordinary player page. Private fixtures, screenshots, scene packages and delivery research remain excluded. This repair does not establish full visual fidelity or the unique cause of the reported remote-browser failure.
