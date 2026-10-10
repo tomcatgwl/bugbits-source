@@ -65,3 +65,7 @@ Only original host UI code changes: direct camera buttons use the existing chang
 ## Pending camera selection, 2026-10-10
 
 Only original host UI changes: retain the pending preset key and show loading status. Controlled real-browser slow loading reproduces the old selection reverting to overview without a status. Fixed behavior passes success, failure, cancellation and latest-selection cases; 26 focused tests and 149 format checks pass. Matrices, simulation, shaders and assets are unchanged. No private fixtures, reports, screenshots or original game assets are included.
+
+## Camera resource loading, 2026-10-10
+
+Only original host/mesh loading code and a synthetic test are added. No original game assets, private reports, screenshots, raw samples or development history are included. The reproducible browser failure was serial loading of unrelated unit animations until deadline. Level closure loading and a bounded download pool pass the same controlled-latency browser case, failure/cancel/latest-selection checks, four distinct actual camera frames, 46 focused tests and 149 format checks. Full game fidelity and user-device recovery remain unverified. MIT code authorization and the existing separate font license remain in effect.

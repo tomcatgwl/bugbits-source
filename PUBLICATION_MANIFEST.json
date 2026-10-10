@@ -310,8 +310,8 @@
     },
     {
       "path": "web/host.js",
-      "bytes": 127196,
-      "sha256": "207866d6cdd044b8b210de12e236d89c75e54475f6d042febc0d16a4434de802",
+      "bytes": 127458,
+      "sha256": "6a26fc7c9f4a335b294933225042e2862f2ed7b8600ca97ec9b15f1789ac12f8",
       "mode": "100644"
     },
     {
@@ -322,8 +322,8 @@
     },
     {
       "path": "web/mesh_scene.js",
-      "bytes": 46105,
-      "sha256": "aed66117f25e87e31f9ff585b33b10e3be3c8abffa6cc51b937709d35c7fc0b7",
+      "bytes": 48164,
+      "sha256": "0033b3fcfa5e63cea0b945fc6586281bcf78b126711154d4f196416de9c09096",
       "mode": "100644"
     },
     {
@@ -1141,10 +1141,16 @@
       "bytes": 1512,
       "sha256": "98396755539f101847101453acd21b2b10c435f856e5e17aa1250daec52b7b3e",
       "mode": "100644"
+    },
+    {
+      "path": "tests/test_mesh_resource_loading.py",
+      "bytes": 7098,
+      "sha256": "e933362f6302dd29c165db0d00f7889f4b63784182b7258f98e6b7827181b967",
+      "mode": "100644"
     }
   ],
   "omittedPaths": [],
-  "bytes": 2288519,
+  "bytes": 2297938,
   "codeOwnershipConfirmed": true,
   "codeLicenseConfirmed": true,
   "containsOriginalGitHistory": false,
@@ -1154,9 +1160,9 @@
   "targetVisibility": "public",
   "authorization": "我有权公开这些项目代码，使用MIT许可证，上传到新建公开仓库 tomcatgwl/bugbits-source。",
   "previousCandidateManifestSHA256": "bf35aeb9ef5b2462d2e7620d0f393f2734ff475752a734126842713c74798037",
-  "updateDate": "2026-10-09",
-  "previousPublishedCommit": "43fa8864f35ee43217e9810d21c19178e1392e2a",
-  "updateScope": "Original host pending camera selection/status only; no assets or private evidence",
+  "updateDate": "2026-10-10",
+  "previousPublishedCommit": "b9bffdfbc4633aca8ebe219c9011d892e4dbbd8d",
+  "updateScope": "Original level-scoped bounded mesh downloads and synthetic tests; no assets or private evidence",
   "originalAssetsIncluded": false,
   "oldGitHistoryIncluded": false,
   "manifestScope": "Implementation files and native project/tests; excludes publication metadata to avoid a self-referential hash",

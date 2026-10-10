@@ -432,8 +432,12 @@ function loadMeshScene(assets, preset, signal) {
       if (Object.hasOwn(assets, 'propVariantContract')) {
         meshPropInstancesFor(assets, state.world, state.levelId, state.manifest);
       }
+      const level = state.manifest?.levels.find(x=>x.id===state.levelId);
+      // deps.units includes future scripted and buyable units, not just live bugs.
+      const unitIds = level?.deps?.units?.length ? level.deps.units : null;
       return BugBitsMeshScene.prepareMeshScene({assets, projection: preset.projection,
-        worldId: state.world, requiredUnitIds: Object.keys(state.units || {}), signal,
+        worldId: state.world, unitIds,
+        requiredUnitIds: unitIds ?? Object.keys(state.units || {}), signal,
         materialPolicy: state.world==='world_01' ? BugBitsPresentationMaterial.POLICY : null});
     }).then(prepared => {
         if (settled || signal.aborted) { prepared.dispose(); }

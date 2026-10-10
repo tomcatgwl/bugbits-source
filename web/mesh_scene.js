@@ -286,23 +286,32 @@
     color=vec4(uObserved?clamp(t.rgb*vLit*uFactor,0.0,1.0):min(vec3(1.0),t.rgb*.25+vec3(40.0/255.0)),uObserved?clamp(t.a*uDiffuseAlpha,0.0,1.0):1.0);
     if(uColor1)color.a*=vDiffuseAlpha;
     if(uObserved){float f=clamp((uFogEnd-vEye)/(uFogEnd-uFogStart),0.0,1.0);color.rgb=mix(uFogColor,color.rgb,f);}}`;
-  async function prepareMeshScene({assets,projection,signal,baseURL,worldId,requiredUnitIds=[],canvas:providedCanvas,materialPolicy=null}={}) {
+  async function prepareMeshScene({assets,projection,signal,baseURL,worldId,requiredUnitIds=[],unitIds=null,canvas:providedCanvas,materialPolicy=null}={}) {
     validateAssets(assets,requiredUnitIds);camera.validateProjection(projection);
     // Hashing and all subsequent samplers/uploads use one private pre-await snapshot.
     assets=JSON.parse(JSON.stringify(assets));projection=JSON.parse(JSON.stringify(projection));
     if(materialPolicy!==null&&materialPolicy!==material?.POLICY)throw TypeError('mesh material policy');
     const observed=materialPolicy!==null;
     if(!Object.hasOwn(assets.worlds,worldId)||assets.worlds[worldId].basisVersion!=='loaded-yup-v1')throw new TypeError('selected mesh world must be loaded-yup-v1');
+    if(unitIds!==null){
+      if(!Array.isArray(unitIds)||!unitIds.length||new Set(unitIds).size!==unitIds.length||unitIds.some(id=>typeof id!=='string'||!Object.hasOwn(assets.units,id))||requiredUnitIds.some(id=>!unitIds.includes(id)))throw new TypeError('selected unit dependency closure');
+      assets.units=Object.fromEntries(unitIds.map(id=>[id,assets.units[id]]));
+      assets.worlds={[worldId]:assets.worlds[worldId]};
+      const needed=new Set();
+      for(const mesh of [...Object.values(assets.units),...assets.worlds[worldId].meshes,...Object.values(assets.props??{})])for(const group of mesh.groups)if(group.texture!==null)needed.add(group.texture);
+      if(assets.nectarSprites){needed.add(assets.nectarSprites.texture);needed.add(assets.nectarSprites.glowTexture);}
+      assets.textures=Object.fromEntries([...needed].map(id=>[id,assets.textures[id]]));
+    }
     const canvas=providedCanvas??(typeof OffscreenCanvas==='function'?new OffscreenCanvas(640,640):Object.assign(document.createElement('canvas'),{width:640,height:640}));
     const gl=canvas.getContext('webgl2',{alpha:false,antialias:false,preserveDrawingBuffer:true});
     if(!gl)throw new Error('WebGL2 unavailable');
     let disposed=false,lost=false;const buffers=[],textures=[],shaders=[],vaos=[];let program;
     const aborted=()=>{if(signal?.aborted)throw new DOMException('Mesh preparation aborted','AbortError');};
-    function wait(promise,lateClose){return new Promise((resolve,reject)=>{
+    function wait(promise,lateClose,waitSignal=signal){return new Promise((resolve,reject)=>{
       let settled=false;
-      const abort=()=>{if(!settled){settled=true;signal?.removeEventListener('abort',abort);reject(new DOMException('Mesh preparation aborted','AbortError'));}};
-      signal?.addEventListener('abort',abort,{once:true});if(signal?.aborted)abort();
-      promise.then(value=>{if(settled){lateClose?.(value);return;}settled=true;signal?.removeEventListener('abort',abort);resolve(value);},error=>{if(!settled){settled=true;signal?.removeEventListener('abort',abort);reject(error);}});
+      const abort=()=>{if(!settled){settled=true;waitSignal?.removeEventListener('abort',abort);reject(new DOMException('Mesh preparation aborted','AbortError'));}};
+      waitSignal?.addEventListener('abort',abort,{once:true});if(waitSignal?.aborted)abort();
+      promise.then(value=>{if(settled){lateClose?.(value);return;}settled=true;waitSignal?.removeEventListener('abort',abort);resolve(value);},error=>{if(!settled){settled=true;waitSignal?.removeEventListener('abort',abort);reject(error);}});
     });}
     const loss=()=>{lost=true;};canvas.addEventListener?.('webglcontextlost',loss);
     function dispose(){if(disposed)return;disposed=true;for(const v of vaos)gl.deleteVertexArray(v);for(const b of buffers)gl.deleteBuffer(b);for(const t of textures)gl.deleteTexture(t);for(const s of shaders)gl.deleteShader(s);if(program)gl.deleteProgram(program);canvas.removeEventListener?.('webglcontextlost',loss);}
@@ -321,25 +330,47 @@
       function createTexture(width,height,pixels){const t=gl.createTexture();if(!t)throw new Error('texture allocation');textures.push(t);gl.bindTexture(gl.TEXTURE_2D,t);gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL,false);gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL,false);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.NEAREST);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.NEAREST);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);
         if(pixels instanceof Uint8Array)gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,width,height,0,gl.RGBA,gl.UNSIGNED_BYTE,pixels);else gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,pixels);if(observed)gl.generateMipmap(gl.TEXTURE_2D);return t;}
       const textureMap=new Map([[null,createTexture(1,1,new Uint8Array([255,255,255,255]))]]);
+      // Download independent resources together; decode and GL uploads stay ordered.
+      const downloads=new Map(),files=[...new Set([
+        ...Object.values(assets.units).filter(u=>u.frameBuffer!==undefined).map(u=>u.frameBuffer.file),
+        ...Object.values(assets.textures).filter(t=>!t.pixels).map(t=>t.file)])];
+      const transfer=new AbortController();let nextFile=0,transferError=null;
+      const abortTransfer=()=>transfer.abort();
+      signal?.addEventListener('abort',abortTransfer,{once:true});if(signal?.aborted)abortTransfer();
+      async function download(){
+        try{
+          while(nextFile<files.length){
+            aborted();if(transfer.signal.aborted)throw new DOMException('Mesh download aborted','AbortError');
+            const file=files[nextFile++];
+            const response=await wait(fetch(new URL(file,baseURL??globalThis.location?.href),{signal:transfer.signal}),undefined,transfer.signal);
+            if(!response.ok)throw new Error('mesh resource fetch '+response.status);
+            downloads.set(file,await wait(response.arrayBuffer(),undefined,transfer.signal));
+          }
+        }catch(error){if(transferError===null)transferError=error;transfer.abort();throw error;}
+      }
+      try{
+        await Promise.allSettled(Array.from({length:Math.min(4,files.length)},download));
+        if(transferError!==null)throw transferError;
+        aborted();
+      }finally{signal?.removeEventListener('abort',abortTransfer);}
       const runtimeUnits={};
       for(const [id,unit] of Object.entries(assets.units)){
         aborted();
         if(unit.frameBuffer===undefined){runtimeUnits[id]=unit;continue;}
-        const response=await wait(fetch(new URL(unit.frameBuffer.file,baseURL??globalThis.location?.href),{signal}));if(!response.ok)throw new Error('binary frame fetch '+response.status);
-        runtimeUnits[id]=await wait(decodeUnitFrameBuffer(unit,await wait(response.arrayBuffer())));
+        runtimeUnits[id]=await wait(decodeUnitFrameBuffer(unit,downloads.get(unit.frameBuffer.file)));
       }
       for(const [id,t] of Object.entries(assets.textures)){
         aborted();
         if(t.pixels)textureMap.set(id,createTexture(t.width,t.height,new Uint8Array(t.pixels)));
         else {
-          const response=await wait(fetch(new URL(t.file,baseURL??globalThis.location?.href),{signal}));if(!response.ok)throw new Error('texture fetch '+response.status);
-          const bytes=await wait(response.arrayBuffer());if(t.size!==undefined&&bytes.byteLength!==t.size)throw new Error('encoded texture size');
+          const bytes=downloads.get(t.file);if(t.size!==undefined&&bytes.byteLength!==t.size)throw new Error('encoded texture size');
           const hash=Array.from(new Uint8Array(await wait(crypto.subtle.digest('SHA-256',bytes))),v=>v.toString(16).padStart(2,'0')).join('');
           if(hash!==(t.sha256??t.fileSHA256))throw new Error('texture encoded SHA mismatch');
           const image=await wait(createImageBitmap(new Blob([bytes],{type:'image/png'}),{premultiplyAlpha:'none',colorSpaceConversion:'none'}),image=>image.close());
           try{aborted();if(image.width!==t.width||image.height!==t.height)throw new Error('decoded texture extent');textureMap.set(id,createTexture(t.width,t.height,image));}finally{image.close();}
         }
       }
+      downloads.clear();
       function buffer(target,data){const b=gl.createBuffer();if(!b)throw new Error('buffer allocation');buffers.push(b);gl.bindBuffer(target,b);gl.bufferData(target,data,gl.STATIC_DRAW);return b;}
       function gpuMesh(mesh,positions,normals=mesh.normals){
         const vao=gl.createVertexArray();if(!vao)throw new Error('VAO allocation');vaos.push(vao);gl.bindVertexArray(vao);
