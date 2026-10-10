@@ -37,3 +37,5 @@ PYTHONPATH=src:tests python3 -B -m unittest test_assets_v3d_world_synthetic
 目标：GitHub公开仓库`tomcatgwl/bugbits-source`。仓库从独立源码快照开始，后续增量提交仍不携带私有开发仓库的旧历史。
 
 Camera controls now also provide in-page buttons for the available views. They share the existing selection, level eligibility and asynchronous loading rules. The native select remains available. This compatibility entry does not establish the cause of a specific embedded-browser failure or original-game visual fidelity. The repository still contains no original assets.
+
+Camera selection now retains the requested view while loading and shows a loading status. Success commits the view; failure restores the current view and reports the reason. This UI repair does not change camera matrices or establish original-game visual fidelity.

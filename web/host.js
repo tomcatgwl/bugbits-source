@@ -123,7 +123,7 @@ const render = {
   presetTerrainCloseCount: 0,   // 预设位图 close 总数（CAM-01 所有权诊断：
                             // null 复位/换预设替换/在途淘汰/换关重置四路释放）
   presetReqSeq: 0,        // CAM-01：预设请求版本（单调递增，latest-intent-wins）
-  presetController: null, presetPending: null, presetError: "",
+  presetController: null, presetPending: null, presetPendingKey: null, presetError: "",
   cameraReady: false,     // current session's default selection attempt settled
   cameraControlGeneration: 0,   // legal overview/world base exists for this session
   terrainWorld: null, terrainCloseCount: 0,   // 切世界地形释放计数（RF-02 诊断）
@@ -258,7 +258,8 @@ function nativeCameraPresetValid(preset) {
 function updateCameraControl() {
   const control = $("camera-mode");
   if (control) {
-    control.value = render.activePresetKey || "overview";
+    control.value = (render.presetPending !== null && render.presetPendingKey)
+      || render.activePresetKey || "overview";
     control.disabled = !cameraControlAvailable();
     const near = control.querySelector(`option[value="${NEAR_CAMERA_PRESET}"]`);
     if (near) { near.disabled = !(render.worldPresets && render.worldPresets[NEAR_CAMERA_PRESET]); }
@@ -293,7 +294,10 @@ function updateCameraControl() {
       : render.presetError === 'WebGL2 unavailable'
         ? '当前设备无法使用3D渲染，请在其他设备重试'
         : render.presetError;
-    note.textContent = reason ? `视角加载失败：${reason}。已保留当前视角。` : '';
+    const loading = render.presetPending !== null && render.presetPendingKey;
+    const option = loading && $("camera-mode")?.querySelector(`option[value="${render.presetPendingKey}"]`);
+    note.textContent = reason ? `视角加载失败：${reason}。已保留当前视角。`
+      : loading ? `${option?.textContent || '视角'}加载中…` : '';
   }
 }
 
@@ -447,6 +451,7 @@ async function setCameraPreset(key) {
   render.presetController = null;
   render.presetPending = null;
   render.presetError = "";
+  render.presetPendingKey = null;
   const superseded = () => req !== render.presetReqSeq || gen !== state.generation;
   if (key === null) { commitCameraView(null, null, null); return true; }
   const preset = render.worldPresets && render.worldPresets[key];
@@ -520,6 +525,7 @@ async function setCameraPreset(key) {
   const controller = new AbortController();
   render.presetController = controller;
   render.presetPending = req;
+  render.presetPendingKey = key;
   updateCameraControl();
   const timeout = setTimeout(() => controller.abort(), CAMERA_LOAD_TIMEOUT_MS);
   try {
@@ -551,6 +557,7 @@ async function setCameraPreset(key) {
     if (!superseded()) {
       render.presetController = null;
       render.presetPending = null;
+      render.presetPendingKey = null;
       updateCameraControl();
     }
   }

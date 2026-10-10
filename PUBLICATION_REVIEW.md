@@ -61,3 +61,7 @@ that the experimental game consumer or full visual fidelity has passed.
 ## Direct camera controls, 2026-10-09
 
 Only original host UI code changes: direct camera buttons use the existing change handler and mirror select/option availability. No camera matrices, assets, simulation or shaders change. Actual browser button clicks cover four views at a fixed simulation tick; all four canvas outputs differ and repeated views reproduce the same output. Legacy select regression passes. 26 focused camera tests and 149 asset-format assertions pass locally. The full game suite was not rerun. Private screenshots, fixtures, game data, delivery scripts and runtime evidence remain excluded.
+
+## Pending camera selection, 2026-10-10
+
+Only original host UI changes: retain the pending preset key and show loading status. Controlled real-browser slow loading reproduces the old selection reverting to overview without a status. Fixed behavior passes success, failure, cancellation and latest-selection cases; 26 focused tests and 149 format checks pass. Matrices, simulation, shaders and assets are unchanged. No private fixtures, reports, screenshots or original game assets are included.
